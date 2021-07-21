@@ -34,7 +34,7 @@ if( $user === false){
   redirect_to(LOGIN_URL);
 }
 
-// 
+// ログインできている場合はログイン完了メッセージをセッション変数に格納
 set_message('ログインしました。');
 // ユーザータイプが管理者であるか確認する
 if ($user['type'] === USER_TYPE_ADMIN){
