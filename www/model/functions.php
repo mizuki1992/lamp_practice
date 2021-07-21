@@ -1,47 +1,88 @@
 <?php
 
+// 変数の値を確認する関数
+// 引数：表示させたい変数
 function dd($var){
+  // $varの値を表示させる
   var_dump($var);
+  // 表示させたら処理終了
   exit();
 }
 
+// リダイレクト用関数
+// 引数：リダイレクトさせたい各ページ（定数ファイルで定義）
 function redirect_to($url){
+  // リダイレクトさせたいページへリダイレクト
   header('Location: ' . $url);
+  // リダイレクトしたら処理終了
   exit;
 }
 
+// get値取得用関数
+// 引数；取得したいget値
 function get_get($name){
+  // 値が存在するか確認
   if(isset($_GET[$name]) === true){
+    // 値が存在する場合
+    // 戻り値：getで取得した値
     return $_GET[$name];
   };
+  // 値が存在しない場合
+  // 戻り値：空文字を返す
   return '';
 }
 
+// post値取得用関数
+// 引数：取得したいpost値
 function get_post($name){
+  // 値が存在するか確認
   if(isset($_POST[$name]) === true){
+    // 値が存在する場合
+    // 戻り値：postで取得した値
     return $_POST[$name];
   };
+  // 値が存在しない場合
+  // 戻り値：空文字を返す
   return '';
 }
 
+// HTTPPOSTでのファイルアップロードチェック関数
+// 引数：アップロードしたファイル名
 function get_file($name){
+  // 値が存在するか確認
   if(isset($_FILES[$name]) === true){
+    // 値が存在する場合
+    // 戻り値：アップロードされたファイル名
     return $_FILES[$name];
   };
+  // 値が存在しない場合
+  // 戻り値：空の配列を返す
   return array();
 }
 
+// セッション変数に保存されている値取得用関数
+// 引数：取得したいセッション変数
 function get_session($name){
+  // 値が存在するか確認
   if(isset($_SESSION[$name]) === true){
+    // 値が存在する場合
+    // 戻り値：セッション変数に保存されている値
     return $_SESSION[$name];
   };
+  // 値が存在しない場合
+  // 戻り値：空文字を返す
   return '';
 }
 
+// セッション変数に値をセット用関数
+// 引数１：値をセットさせたいキー
+// 引数２：セットしたい値
 function set_session($name, $value){
+  // セッション変数のキーに値をセット
   $_SESSION[$name] = $value;
 }
 
+// 
 function set_error($error){
   $_SESSION['__errors'][] = $error;
 }
