@@ -1,10 +1,17 @@
 <?php
+// 汎用関数ファイルを読み込み
 require_once MODEL_PATH . 'functions.php';
+// データベース関数ファイルを読み込み
 require_once MODEL_PATH . 'db.php';
 
 // DB利用
 
+// 商品データ取得用関数
+// 引数１：PDO利用
+// 引数２：データを取得したい商品ID
+// 戻り値：クエリ読み込み用関数（取得データはひとつ）を利用して取得したデータ
 function get_item($db, $item_id){
+  // itemテーブルから引数２の商品IDの商品ID、商品名、在庫数、値段、商品画像ファイル名、公開ステータスを取得するSQL文
   $sql = "
     SELECT
       item_id, 
@@ -19,10 +26,16 @@ function get_item($db, $item_id){
       item_id = :item_id
   ";
 
+  // クエリ読み込み用関数（取得データはひとつ）を利用して取得したデータを返す
   return fetch_query($db, $sql, array(':item_id' => $item_id));
 }
 
+// 商品データ取得用関数（公開ステータスで切り分け）
+// 引数１：PDO利用
+// 引数２：公開ステータス
+// 戻り値：クエリ読み込み用関数（取得データは全て）を利用して取得したデータ
 function get_items($db, $is_open = false){
+  // itemテーブルから全ての商品データを取得
   $sql = '
     SELECT
       item_id, 
@@ -34,22 +47,36 @@ function get_items($db, $is_open = false){
     FROM
       items
   ';
+  // ステータスが公開の場合
   if($is_open === true){
+    // 上のSQL文にステータスの条件を追加
     $sql .= '
       WHERE status = 1
     ';
   }
 
+  // クエリ読み込み用関数（取得データは全て）を利用して取得したデータを返す
   return fetch_all_query($db, $sql);
 }
 
+// 全ての商品データ取得用関数
+// 引数：PDO利用
+// 戻り値：商品データ取得用関数（公開ステータスで切り分け）を利用して取得したデータを返す
 function get_all_items($db){
+  // 商品データ取得用関数（公開ステータスで切り分け）を利用
+  // 公開ステータスに関係なく全てのデータを取得するため引数２は省略
   return get_items($db);
 }
 
+// ステータスが公開になっている商品データ取得用関数
+// 引数：PDO利用
+// 戻り値：商品データ取得用関数（公開ステータスで切り分け）を利用してステータスが公開のデータ
 function get_open_items($db){
+  // 商品データ取得用関数（公開ステータスで切り分け）を利用
+  // 公開ステータスの商品を取得するため引数２を公開
   return get_items($db, true);
 }
+
 
 function regist_item($db, $name, $price, $stock, $status, $image){
   $filename = get_upload_filename($image);
