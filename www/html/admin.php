@@ -32,5 +32,7 @@ if(is_admin($user) === false){
 // 全てのアイテム取得用関数を利用
 $items = get_all_items($db);
 
+$token = get_csrf_token();
+
 // ビューファイルの読み込み
 include_once VIEW_PATH . '/admin_view.php';
