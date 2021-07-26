@@ -15,6 +15,16 @@ if(is_logined() === true){
   redirect_to(HOME_URL);
 }
 
+// post値取得用関数を利用してpostされたトークンを取得
+$token = get_post('csrf_token');
+// postされたトークンとセッションに保存しているトークンを照合
+if(is_valid_csrf_token($token) === false){
+  // 照合できない場合リダイレクト用関数を利用してログインページにリダイレクト
+  redirect_to(LOGIN_URL);
+}
+// セッションに保存されているトークンを破棄
+unset($_SESSION['csrf_token']);
+
 // post値取得用関数を利用してpostされたユーザー名を取得
 $name = get_post('name');
 // post値取得用関数を利用してpostされたパスワードを取得

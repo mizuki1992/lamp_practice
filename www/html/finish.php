@@ -19,6 +19,16 @@ if(is_logined() === false){
   redirect_to(LOGIN_URL);
 }
 
+// post値取得用関数を利用してpostされたトークンを取得
+$token = get_post('csrf_token');
+// postされたトークンとセッションに保存しているトークンを照合
+if(is_valid_csrf_token($token) === false){
+  // 照合できない場合リダイレクト用関数を利用してログインページにリダイレクト
+  redirect_to(LOGIN_URL);
+}
+// セッションに保存されているトークンを破棄
+unset($_SESSION['csrf_token']);
+
 // PDO取得
 $db = get_db_connect();
 // PDOを利用してログインユーザーのデータを取得
@@ -37,6 +47,9 @@ if(purchase_carts($db, $carts) === false){
 
 // カートの合計金額算出用関数を利用してカートの合計金額を算出する
 $total_price = sum_carts($carts);
+
+// トークン生成用関数を利用してトークンを取得
+$token = get_csrf_token();
 
 // ビューファイルの読み込み
 include_once '../view/finish_view.php';
