@@ -48,5 +48,8 @@ if(purchase_carts($db, $carts) === false){
 // カートの合計金額算出用関数を利用してカートの合計金額を算出する
 $total_price = sum_carts($carts);
 
+// トークン生成用関数を利用してトークンを取得
+$token = get_csrf_token();
+
 // ビューファイルの読み込み
 include_once '../view/finish_view.php';
