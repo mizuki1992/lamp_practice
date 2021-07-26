@@ -75,8 +75,7 @@ function get_session($name){
 }
 
 // セッション変数に値をセット用関数
-// 引数１：値をセットさせたいキー
-// 引数２：セットしたい値
+// 引数１：値をセットさせたいキー、引数２：セットしたい値
 function set_session($name, $value){
   // セッション変数のキーに値をセット
   $_SESSION[$name] = $value;
@@ -96,10 +95,13 @@ function get_errors(){
   return $errors;
 }
 
+// セッションに保存されているエラーの有無確認用関数
 function has_error(){
+  // エラーが存在して、尚且つエラーが０では無い場合はtrueを返す
   return isset($_SESSION['__errors']) && count($_SESSION['__errors']) !== 0;
 }
 
+// 
 function set_message($message){
   $_SESSION['__messages'][] = $message;
 }
@@ -113,10 +115,13 @@ function get_messages(){
   return $messages;
 }
 
+// ログインチェック用関数
 function is_logined(){
+  // セッション変数に保存されている値取得用関数を利用して$_SESSION['user_id']が空文字ではない場合trueを返す
   return get_session('user_id') !== '';
 }
 
+// アップロードされたファイル名取得用関数
 function get_upload_filename($file){
   if(is_valid_upload_image($file) === false){
     return '';
@@ -126,6 +131,8 @@ function get_upload_filename($file){
   return get_random_string() . '.' . $ext;
 }
 
+// ランダムな文字列取得用関数
+// 引数：文字数（省略した場合20文字）
 function get_random_string($length = 20){
   return substr(base_convert(hash('sha256', uniqid()), 16, 36), 0, $length);
 }
@@ -144,21 +151,33 @@ function delete_image($filename){
 }
 
 
-
+// 文字数確認用関数
+// 引数１：文字数を取得したい文字列、引数２：最小文字数、引数３：最大文字数（PHP がサポートする整数型の最大値）
 function is_valid_length($string, $minimum_length, $maximum_length = PHP_INT_MAX){
+  // mb_strlen関数を利用して文字数を取得したい文字列の文字数を取得
   $length = mb_strlen($string);
+  // 取得した文字列が最小文字数以上で、最大文字数以下である場合trueを返す
   return ($minimum_length <= $length) && ($length <= $maximum_length);
 }
 
+// 半角英数字チェック用関数
+// 引数：半角英数字で入力されているかチェックしたい文字列
 function is_alphanumeric($string){
+  // 入力された文字列の形式チェック用関数を利用し、定義済みの正規表現パターンとマッチする場合はtrueを返す
   return is_valid_format($string, REGEXP_ALPHANUMERIC);
 }
 
+// 正整数チェック用関数
+// 引数：正整数で入力されているかチェックしたい文字列
 function is_positive_integer($string){
+  // 入力された文字列の形式チェック用関数を利用し、定義済みの正規表現パターンとマッチする場合はtrueを返す
   return is_valid_format($string, REGEXP_POSITIVE_INTEGER);
 }
 
+// 入力された文字列の形式チェック用関数
+// 引数１：形式チェックする文字列、引数２：形式チェックで使用する正規表現のパターン
 function is_valid_format($string, $format){
+  // preg_match関数で正規表現を使用して文字列が有効であった場合「１」になり、trueを返す
   return preg_match($format, $string) === 1;
 }
 
