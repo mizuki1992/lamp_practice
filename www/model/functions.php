@@ -81,16 +81,23 @@ function set_session($name, $value){
   $_SESSION[$name] = $value;
 }
 
-// 
+// エラーメッセージ格納用関数
+// 引数：エラーメッセージ
 function set_error($error){
+  // エラーメッセージ用のセッション変数の末尾にエラーメッセージをセット
   $_SESSION['__errors'][] = $error;
 }
 
+// エラーメッセージ格納用関数
 function get_errors(){
+// セッション変数に保存されている値取得用関数を利用してエラーメッセージを取得
   $errors = get_session('__errors');
+  // エラーメッセージが空白である場合は
   if($errors === ''){
+    // 空の配列を返す
     return array();
   }
+  // セッション変数に値をセット用関数を利用してエラーメッセージ用変数に
   set_session('__errors',  array());
   return $errors;
 }
@@ -101,8 +108,10 @@ function has_error(){
   return isset($_SESSION['__errors']) && count($_SESSION['__errors']) !== 0;
 }
 
-// 
+// メッセージ格納用関数
+// 引数：メッセージ
 function set_message($message){
+  //メッセージ用のセッション変数の末尾にエラーメッセージをセット
   $_SESSION['__messages'][] = $message;
 }
 
@@ -195,8 +204,12 @@ function is_valid_upload_image($image){
   return true;
 }
 
+// h関数
+// 引数：文字列
 function h($str){
+  // 文字列にエスケープ処理を施す
   $str = htmlspecialchars($str , ENT_QUOTES, 'UTF-8');
+  // 処理後の文字列を返す
   return $str;
 }
 
