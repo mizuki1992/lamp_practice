@@ -48,6 +48,46 @@ if(purchase_carts($db, $carts) === false){
 // カートの合計金額算出用関数を利用してカートの合計金額を算出する
 $total_price = sum_carts($carts);
 
+
+// 商品購入履歴を追加
+// トランザクションを開始
+$db->beginTransaction();
+// 取得しているカートの中身データを一つずつ取得
+foreach($carts as $cart){
+// 購入履歴テーブルの追加
+  if(insert_purchase_history(
+    $db,
+    $cart['user_id'],
+    $total_price
+    ) === false){
+      // ロールバック処理
+      $db->rollback();
+      // 購入履歴テーブルに追加できなかった場合はエラーメッセージをセッション変数に格納
+      set_error('購入履歴を登録できませんでした。');
+      // 購入履歴テーブルに追加できなかった場合はリダイレクト用関数を利用してカートページにリダイレクト
+      redirect_to(CART_URL);
+    }
+    // history_idを取得
+    $history_id = $db->lastInsertId();
+    if(insert_purchase_history_detail(
+      $db, 
+      $cart['item_id'],
+      $cart['price'],
+      $cart['amount'],
+      $history_id
+      ) === false){
+        // ロールバック処理
+        $db->rollback();
+        // 履歴明細テーブルに追加できなかった場合はエラーメッセージをセッション変数に格納
+        set_error('履歴を登録できませんでした。');
+        // 履歴明細テーブルに追加できなかった場合はリダイレクト用関数を利用してカートページにリダイレクト
+        redirect_to(CART_URL);
+      }
+}
+// コミット
+$db->commit();
+
+
 // トークン生成用関数を利用してトークンを取得
 $token = get_csrf_token();
 

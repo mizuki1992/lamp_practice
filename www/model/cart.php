@@ -178,3 +178,34 @@ function validate_cart_purchase($carts){
   return true;
 }
 
+// 購入履歴テーブルの追加
+// 引数：$db、ユーザーID、合計金額
+// 戻り値：処理が成功したらtrue、失敗したらfalse
+function insert_purchase_history($db,$user_id,$total_price){
+  $sql = "
+  INSERT INTO 
+    purchase_history(
+      user_id,
+      total_price
+    )
+    VALUES(:user_id, :total_price)
+  ";
+  return execute_query($db, $sql, array(':user_id' => $user_id, ':total_price' => $total_price));
+}
+
+// 履歴明細テーブルの追加
+// 引数：$db、商品ID、単価、購入数、history_id
+// 戻り値：処理が成功したらtrue、失敗したらfalse
+function insert_purchase_history_detail($db,$item_id,$price,$amount,$history_id){
+  $sql = "
+  INSERT INTO 
+    purchase_history_detail(
+      item_id,
+      price,
+      amount,
+      history_id
+    )
+    VALUES(:item_id, :price, :amount, :history_id)
+  ";
+  return execute_query($db, $sql, array(':item_id' => $item_id, ':price' => $price, ':amount' => $amount, ':history_id' => $history_id));
+}
