@@ -60,11 +60,11 @@ function get_purchase_history_detail($db,$history_id){
     purchase_history_detail.price,
     purchase_history_detail.amount
   FROM
-    items
-  LEFT OUTER JOIN 
     purchase_history_detail
+  INNER JOIN 
+    items
   ON
-    items.item_id = purchase_history_detail.item_id
+    purchase_history_detail.item_id = items.item_id
   WHERE
     history_id = :history_id';
 
