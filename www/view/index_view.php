@@ -15,6 +15,15 @@
     <h1>商品一覧</h1>
     <?php include VIEW_PATH . 'templates/messages.php'; ?>
 
+    <form name='sortForm'>
+      <select id="sort" name="sort">
+        <option <?php if($sort === 'new'){ print h('selected');} ?> value="new">新着順</option>
+        <option <?php if($sort === 'cheap'){ print h('selected');} ?> value="cheap">価格の安い順</option>
+        <option <?php if($sort === 'expensive'){ print h('selected');} ?> value="expensive">価格の高い順</option>
+      </select>
+      <input type="submit" value="並び替え">
+    </form>
+
     <div class="card-deck">
       <div class="row">
       <?php foreach($items as $item){ ?>
@@ -44,6 +53,6 @@
       </div>
     </div>
   </div>
-  
+  <script type='text/javascript' src='<?php print(h(JS_PATH . 'sort.js')); ?>'></script>
 </body>
 </html>

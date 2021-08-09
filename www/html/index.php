@@ -22,8 +22,13 @@ $db = get_db_connect();
 // PDOを利用してログインユーザーのデータを取得
 $user = get_login_user($db);
 
+$sort = get_get('sort');
+if($sort === ''){
+  $sort = 'new';
+}
+
 // 商品一覧用の商品データを取得
-$items = get_open_items($db);
+$items = get_open_items($db,$sort);
 
 // トークン生成用関数を利用してトークンを取得
 $token = get_csrf_token();
