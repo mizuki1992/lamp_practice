@@ -34,7 +34,7 @@ function get_item($db, $item_id){
 // 引数１：PDO利用
 // 引数２：公開ステータス
 // 戻り値：クエリ読み込み用関数（取得データは全て）を利用して取得したデータ
-function get_items($db, $is_open = false){
+function get_items($db, $is_open = false, $sort = ''){
   // itemテーブルから全ての商品データを取得
   $sql = '
     SELECT
@@ -54,6 +54,28 @@ function get_items($db, $is_open = false){
       WHERE status = 1
     ';
   }
+  // 新着順で並べる場合
+  if($sort === 'new'){
+      // 上のSQL文に新着順の条件を追加
+      $sql .= '
+        ORDER BY
+         created DESC
+      ';
+  // 安い順で並べる場合
+  }elseif($sort === 'cheap'){
+      // 上のSQL文に安い順の条件を追加
+      $sql .= '
+        ORDER BY
+         price ASC
+      ';
+  // 高い順で並べる場合
+  }elseif($sort === 'expensive'){
+      // 上のSQL文に高い順の条件を追加
+      $sql .= '
+        ORDER BY
+         price DESC
+      ';
+  }
 
   // クエリ読み込み用関数（取得データは全て）を利用して取得したデータを返す
   return fetch_all_query($db, $sql);
@@ -71,10 +93,10 @@ function get_all_items($db){
 // ステータスが公開になっている商品データ取得用関数
 // 引数：PDO利用
 // 戻り値：商品データ取得用関数（公開ステータスで切り分け）を利用してステータスが公開のデータ
-function get_open_items($db){
+function get_open_items($db, $sort){
   // 商品データ取得用関数（公開ステータスで切り分け）を利用
   // 公開ステータスの商品を取得するため引数２を公開
-  return get_items($db, true);
+  return get_items($db, true, $sort);
 }
 
 
