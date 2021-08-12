@@ -34,7 +34,7 @@ function get_item($db, $item_id){
 // 引数１：PDO利用
 // 引数２：公開ステータス
 // 戻り値：クエリ読み込み用関数（取得データは全て）を利用して取得したデータ
-function get_items($db, $is_open = false, $sort = ''){
+function get_items($db, $is_open = false, $sort = '', $page = NULL){
   // itemテーブルから全ての商品データを取得
   $sql = '
     SELECT
@@ -76,10 +76,48 @@ function get_items($db, $is_open = false, $sort = ''){
          price DESC
       ';
   }
-
-  // クエリ読み込み用関数（取得データは全て）を利用して取得したデータを返す
-  return fetch_all_query($db, $sql);
+  // ページ数に値が入っていたら、８件分を表示させるSQL文を追加
+  if(is_null($page) !== TRUE){
+    $sql .= '
+    LIMIT :start_item,8;
+  ';
+    // 表示させる商品の開始位置を指定
+    $start_item = ((int)$page - 1) * 8;
+    // クエリ読み込み用関数（取得データは全て）を利用して取得したデータを返す
+    return fetch_all_query($db, $sql, array(':start_item' => $start_item));
+  } else {
+    // ページ数に値が入ってい無い場合は、全件表示させる
+    // クエリ読み込み用関数（取得データは全て）を利用して取得したデータを返す
+    return fetch_all_query($db, $sql);
+  }
 }
+
+// 現在のページ数取得用関数
+function get_current_page($page){
+  // $_GET['page']から値を取得して整数型に変換
+  $current_page = (int)(get_get('page'));
+  // ページ数に値が入っていない場合、文字列が入っていた場合は、１ページ目とする
+  if($current_page === 0){
+    $current_page = 1;
+  }
+  return $current_page;
+}
+
+// 商品数取得用関数
+function count_items($db){
+  // count(*)で商品数を取得して、items_amountとして別名をつける
+  $sql = '
+    SELECT
+      count(*) AS items_amount
+    FROM
+      items
+    WHERE
+      status = 1
+  ';
+  // クエリ読み込み用関数（取得データはひとつ）を利用して取得した商品数を返す
+  return fetch_query($db, $sql);
+}
+
 
 // 全ての商品データ取得用関数
 // 引数：PDO利用
@@ -93,10 +131,10 @@ function get_all_items($db){
 // ステータスが公開になっている商品データ取得用関数
 // 引数：PDO利用
 // 戻り値：商品データ取得用関数（公開ステータスで切り分け）を利用してステータスが公開のデータ
-function get_open_items($db, $sort){
+function get_open_items($db, $sort, $page){
   // 商品データ取得用関数（公開ステータスで切り分け）を利用
   // 公開ステータスの商品を取得するため引数２を公開
-  return get_items($db, true, $sort);
+  return get_items($db, true, $sort, $page);
 }
 
 
@@ -255,3 +293,4 @@ function is_valid_item_status($status){
   }
   return $is_valid;
 }
+

@@ -52,6 +52,16 @@
       <?php } ?>
       </div>
     </div>
+    <div>
+    <nav class="navbar">
+      <ul class="pagination">
+        <?php for($i = 1;$i <= $total_pages;$i++){ ?>
+          <li class="page-item">
+            <a class="page-link <?php $current_page === $i ? print h('current_page') : '' ; ?>" href="index.php?page=<?php print h($i); ?>&sort=<?php print h($sort); ?>"><?php print h($i); ?></a>
+          </li>
+        <?php } ?>
+      </ul>
+    </nav>
   </div>
   <script type='text/javascript' src='<?php print(h(JS_PATH . 'sort.js')); ?>'></script>
 </body>
