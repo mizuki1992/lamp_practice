@@ -34,6 +34,10 @@ $db = get_db_connect();
 // PDOを利用してログインユーザーのデータを取得
 $user = get_login_user($db);
 
+// post値取得用関数を利用してpost送信された並べ替えの値を取得
+$sort = get_post('sort');
+// post値取得用関数を利用してpost送信された現在のページ数を取得
+$current_page = get_post('current_page');
 
 // post値取得用関数を利用してpostされた商品IDを取得
 $item_id = get_post('item_id');
@@ -47,5 +51,9 @@ if(add_cart($db,$user['user_id'], $item_id)){
   set_error('カートの更新に失敗しました。');
 }
 
-// リダイレクト用関数を利用してホームページにリダイレクト
+// 並べ替え機能、ページ数を変更している場合は、カート追加処理後にリダイレクト用関数を利用して並べ替えの値とページ数を保持したページにリダイレクト
+if($sort !== '' && is_null($current_page) !== true){
+  redirect_to(HOME_URL."?page=".$current_page."&sort=".$sort);
+}
+// 並べ替え機能、ページ数を変更していない場合はカート追加処理後、リダイレクト用関数を利用してindex.phpにリダイレクト
 redirect_to(HOME_URL);

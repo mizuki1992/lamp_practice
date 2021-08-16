@@ -40,6 +40,8 @@
                   <form action="index_add_cart.php" method="post">
                     <input type="submit" value="カートに追加" class="btn btn-primary btn-block">
                     <input type="hidden" name="item_id" value="<?php print(h($item['item_id'])); ?>">
+                    <input type="hidden" name="sort" value="<?php print h($sort); ?>">
+                    <input type="hidden" name="current_page" value="<?php print h($current_page); ?>">
                     <input type="hidden" name="csrf_token" value="<?php print h($token); ?>">
                   </form>
                 <?php } else { ?>
